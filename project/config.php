@@ -1,22 +1,13 @@
 <?php
-/*
-// mysql_connect("database-host", "username", "password")
-$conn = mysql_connect("localhost","root","root") 
-            or die("cannot connected"); 
- 
-// mysql_select_db("database-name", "connection-link-identifier")
-@mysql_select_db("userdata",$conn);
-*/
  
 /**
- * mysql_connect is deprecated
- * using mysqli_connect instead
+ * using mysqli_connect to establish connection with the db
  */
  
-$databaseHost = 'localhost';
-$databaseName = 'userdata';
-$databaseUsername = 'root';
-$databasePassword = '';
+$databaseHost = 'db-private.apps-cp.openworks.gr';
+$databaseName = 'thanasis';
+$databaseUsername = 'thanasis';
+$databasePassword = 'thanasis123';
  
 $mysqli = mysqli_connect($databaseHost, $databaseUsername, $databasePassword, $databaseName); 
 ?>

@@ -1,9 +1,10 @@
 <?php
-session_start();
+include 'head.php';
 // Destroying All Sessions
-if(session_destroy())
-{
-// Redirecting To Home Page
-header("Location: login.php");
-}
-?>
+session_unset();
+if(session_destroy()){
+    // Redirecting to login page
+    echo("<script>location.href = '"."login.php';</script>");
+    //header("Location: login.php");
+  }
+  ?>
