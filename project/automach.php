@@ -3,7 +3,7 @@
 $id = $_GET['id'];
 $jid = $_GET['jid']
 
-function count_array_values($my_array, $match)
+/*function count_array_values($my_array, $match)
 {
     $count = 0;
 
@@ -16,7 +16,7 @@ function count_array_values($my_array, $match)
     }
 
     return $count;
-}
+} */
 
 if($jid){
   $resultoffer = mysqli_query($mysqli, "SELECT * FROM jobOffer WHERE jid = '$jid'");
@@ -30,33 +30,39 @@ if($jid){
     $jexp = $resoffer['jexp'];
     $cid = $resoffer['cid'];
   }
+  $j = 0;
 
-  $result = mysqli_query($mysqli, "SELECT * FROM worker");
+  $result = mysqli_query($mysqli, "SELECT * FROM worker ORDER BY wid ASC");
   while($res = mysqli_fetch_array($result)){
     $wid = $res['wid'];
     $wskills = $reswork['wskills'];
-    $wskill[$wid] = explode(",", $wskills);
+    $wskill[$j] = explode(",", $wskills);
     $wlangs = $reswork['wlang'];
-    $wlang[$wid] = explode(",", $wlangs);
+    $wlang[$j] = explode(",", $wlangs);
     $waddress = $reswork['waddress'];
     $wgradlvl = $reswork['wgradlvl'];
     $wexp = $reswork['wexp'];
+    $j = $j+1;
   }
-  
-$point = array_keys ( $wlang, $jlang);
-$p = count($pont);
-$hit = 0;
-foreach ($wskill as $skill) {
-  $h = count_array_values($jskill, $skill);
-  $hit = $hit + $h;
-  }
-}
 
-foreach ($wlang as $lang) {
-  $h = count_array_values($jlang, $lang);
-  $hit = $hit + $h;
+  $n = 0;
+  while ($n <= $j) {
+    $plang = array_keys ( $wlang[$n], $jlang);
+    $pskill = array_keys ( $wskill[$n], $jskill);
+    if($waddress[$n] === $jloc){
+      $ploc = $ploc +1;
+    }
+    if($wgradlvl[$n] >= $jgradlvl){
+      $pgradlvl = $pgradlvl + 1;
+    }
+    if($wexp[$n] >= $jexp){
+      $pexp = $pexp + 1;
+    }
+    $points[$n] = count($plang) + count($pskill) + $ploc + $pgradlvl + $pexp;
+    $n = $n + 1;
   }
-}
+
+
 
 }else {
   $resultwork = mysqli_query($mysqli, "SELECT * FROM worker WHERE wid = '$id'");

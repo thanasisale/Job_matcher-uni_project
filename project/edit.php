@@ -17,21 +17,14 @@
     //if there is no record in the DB fo this id and the type is worker/company we create one
     if( $type == 'worker'){
       $resultwork = mysqli_query($mysqli, "SELECT * FROM worker WHERE wid=$id") or die(mysqli_error());
+      $rowcount = mysqli_num_rows($resultwork);
 
-      if(empty($resultwork)){
-        mysqli_free_result($resultwork);
-        //$resultworkin = mysqli_query($mysqli, "INSERT INTO worker(wid) VALUES('$id')");
-        $stmt = $mysqli->prepare("INSERT INTO worker (wid) VALUES (:id)");
-        $stmt->bindParam(':id', $wid);
-        $wid = $id;
-        $stmt->execute();
+      if($rowcount > 0){
 
-        //mysqli_free_result($resultworkin);
-      }else{
         while($reswork = mysqli_fetch_array($resultwork)){
-          $wfname = $reswork['wfname'];
+          $wfname = $reswork['wname'];
           $wlname = $reswork['wlname'];
-          $wage = $reswork['wage'];
+          $wage = $reswork['wAge'];
           $waddress = $reswork['waddress'];
           $wtel = $reswork['wtel'];
           $wgradlvl = $reswork['wgradlvl'];
@@ -40,26 +33,25 @@
           //making the strings to arrays using "," as a delimeter using explode
           //$skills = explode(" ", $reswork['wskills']);
           $skills = $reswork['wskills'];
-          $skill = explode(",", $skills);
+          $skill = explode("*", $skills);
           $langs = $reswork['wlang'];
-          $lang = explode(",", $langs);
+          $lang = explode("*", $langs);
         }
         mysqli_free_result($resultwork);
-      }
-    }elseif( $type == 'company'){
-      $resultcomp = mysqli_query($mysqli, "SELECT * FROM comptab WHERE cid=$id") or die(mysqli_error());
-      
-      if(empty($resultcomp)){
-
-        mysqli_free_result($resultcomp);
-        //$resultcompin = mysqli_query($mysqli, "INSERT INTO comptab(cid) VALUES('$id')");
-        $stmt = $mysqli->prepare("INSERT INTO comptab (cid) VALUES (:id)");
-        $stmt->bindParam(':id', $cid);
-        $cid = $id;
-        $stmt->execute();
-        //mysqli_free_result($resultcompin);
 
       }else{
+
+        $resultworkin = mysqli_query($mysqli, "INSERT INTO worker(wid) VALUES('$id')");
+        mysqli_free_result($resultworkin);
+
+      }
+    }elseif( $type == 'company'){
+
+      $resultcomp = mysqli_query($mysqli, "SELECT * FROM comptab WHERE comptab.cid = " . $id);
+      $rowcount = mysqli_num_rows($resultcomp);
+
+      if($rowcount > 0){
+
         while($rescomp = mysqli_fetch_array($resultcomp)){
           $cname = $rescomp['cname'];
           $cabout = $rescomp['cabout'];
@@ -67,9 +59,14 @@
           $ctel = $rescomp['ctel'];
         }
         mysqli_free_result($resultcomp);
+
+      }else{
+
+        $resultcompin = mysqli_query($mysqli, "INSERT INTO comptab(cid) VALUES('$id')");
+        mysqli_free_result($resultcompin);
+
       }
     }
-    echo $cname;
     ?>
 
     <title>Edit Data</title>
@@ -78,7 +75,7 @@
 
       <div class="title"><h3>Here You can edit Your Profile!</h3></div>
 
-      <form name="form1" method="post" action="edit.php">
+      <form name="form1" method="POST" action="edit.php">
         <table border="0">
 
           <tr>
@@ -104,7 +101,7 @@
 
             <tr>
               <td>First Name</td>
-              <td><input type="text" name="wfname" value="<?php echo $wfname;?>"></td>
+              <td><input type="text" name="wname" value="<?php echo $wfname;?>"></td>
             </tr>
 
             <tr>
@@ -115,22 +112,27 @@
             <tr>
               <td>Graduation Level</td>
               <td>
-                <input type="radio" name="wgradlvl" value=1 <?php if (isset($wgradlvl) && $wgradlvl=="under") echo "checked";?> >Undergraduate
-                <input type="radio" name="wgradlvl" value=2 <?php if (isset($wgradlvl) && $wgradlvl=="bachelor") echo "checked";?> >Bachelor
-                <input type="radio" name="wgradlvl" value=3 <?php if (isset($wgradlvl) && $wgradlvl=="master") echo "checked";?> >Master
+                <input type="radio" name="wgradlvl" value='under' <?php if (isset($wgradlvl) && $wgradlvl=="under") echo "checked";?> >Undergraduate
+                <input type="radio" name="wgradlvl" value='bachelor' <?php if (isset($wgradlvl) && $wgradlvl=="bachelor") echo "checked";?> >Bachelor
+                <input type="radio" name="wgradlvl" value='master' <?php if (isset($wgradlvl) && $wgradlvl=="master") echo "checked";?> >Master
               </td>
             </tr>
 
             <tr>
               <td>Basic info</td>
               <td>
-                <textarea name="winfo" rows="5" cols="30" value=" <?php echo $winfo; ?> "></textarea>
+                <textarea name="winfo" rows="5" cols="30"><?php echo $winfo; ?></textarea>
               </td>
             </tr>
 
             <tr>
               <td>Age</td>
-              <td><input type="date" name="wage" value="<?php echo $wage;?>"></td>
+
+              <?php //fixing the date format to be able to be shown
+              $fwage = date("Y-m-d", strtotime($wage));
+              $wage = $fwage; ?>
+
+              <td><input type="date" name="wAge" value="<?php echo $wage;?>"></td>
             </tr>
 
             <tr>
@@ -148,11 +150,13 @@
               <td><input type="number" name="wexp" value="<?php echo $wexp;?>"> Months</td>
             </tr>
 
+
             <tr>
               <td>Skills</td>
               <td id="inputs">
                 <?php $s = 0;
-                while($skill){?>
+                $ns = count($skill);
+                while( $ns >= $s ){?>
                   <input type="text" name="skills[]" value="<?php echo $skill[$s];?>">
                   <?php $s = $s + 1;
                 } ?>
@@ -168,16 +172,20 @@
               <td style="border-top: 1px solid #999;">Known Languages</td>
               <td id="inputslang" style="border-top: 1px solid #999;">
                 <?php $l = 0;
-                while($lang){?>
+                $nl = count($lang);
+                while($nl >= $l){?>
                   <input type="text" name="languages[]" value="<?php echo $lang[$l];?>" >
                   <?php $l = $l + 1;
                 } ?>
               </td>
+
               <td style="width:5%;border:none;">
                 <a class="btn" id="adderlang" href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
                 <a class="btn" id="removelang" href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
               </td>
             </tr>
+
+
           <?php }elseif($type == 'company'){ ?>
             <tr>
               <td>Company Name</td>
@@ -188,7 +196,7 @@
             <tr>
               <td>About the Company</td>
               <td>
-                <textarea name="cabout" rows="5" cols="30" value=" <?php echo $cabout; ?> "></textarea>
+                <textarea name="cabout" rows="5" cols="30" ><?php echo $cabout; ?></textarea>
               </td>
             </tr>
 
@@ -202,7 +210,7 @@
               <td><input type="text" name="ctel" value="<?php echo $ctel;?>"></td>
             </tr>
 
-          <?php }else{ echo("<td>Something went wrong refresh and try again later!</td>"); } ?>
+          <?php } ?>
 
             <tr>
               <td><input type="hidden" name="id" value=<?php echo $_GET['id'];?>></td>
@@ -246,14 +254,16 @@
           }
 
          }else{
+
           //updating the main user table
           $result = mysqli_query($mysqli, "UPDATE usertab SET email='$email',pass='$pass',type='$type' WHERE ID=$id");
 
         }
+
         if($type == 'worker') {
 
           //making sure of the content,by removing slashes
-          $wfname = stripslashes($_POST['wfname']);
+          $wfname = stripslashes($_POST['wname']);
           $wfname = mysqli_real_escape_string($mysqli,$wfname);
 
           $wlname = stripslashes($_POST['wlname']);
@@ -265,7 +275,7 @@
           $winfo = stripslashes($_POST['winfo']);
           $winfo = mysqli_real_escape_string($mysqli,$winfo);
 
-          $wage = stripslashes($_POST['wage']);
+          $wage = stripslashes($_POST['wAge']);
           $wage = mysqli_real_escape_string($mysqli,$wage);
 
           $waddress = stripslashes($_POST['waddress']);
@@ -277,25 +287,25 @@
           $wexp = stripslashes($_POST['wexp']);
           $wexp = mysqli_real_escape_string($mysqli,$wexp);
 
-          $s2 = 0;
-          while($s2 <= $s){
-            $skill[$s2] = stripslashes($_POST['skills']);
-            $s2 = $s2 + 1;
-          }
-          //making the arrays to a string seperated by "," using implode
-          $skills = implode(",", $skill);
+
+          //making the arrays to a string seperated by "*" using implode
+          $skills = implode("*", $_POST['skills']);
+          $skills = stripslashes($skills);
           $skills = mysqli_real_escape_string($mysqli,$skills);
 
-          $l2 = 0;
+          /*$l2 = 0;
           while($l2 <= $l){
-            $lang[$l2] = stripslashes($_POST['languages']);
+
             $l2 = $l2 + 1;
-          }
-          $langs = implode(",", $lang);
+          }*/
+
+          $langs = implode("*", $_POST['languages']);
+          $langs = stripslashes($langs);
           $langs = mysqli_real_escape_string($mysqli,$langs);
 
           //updating the worker table
-          $resultwork = mysqli_query($mysqli, "UPDATE worker SET wfname='$wfname',wlname='$wlname',wgradlvl='$wgradlvl',winfo='$winfo',wskills='$skills',wage='$wage',waddress='$waddress',wtel='$wtel',wexp='$wexp',wlang='$langs' WHERE wid=$id");
+          $resultwork = mysqli_query($mysqli,"UPDATE `worker` SET `wname`='$wfname',`wlname`='$wlname',`wgradlvl`='$wgradlvl',`winfo`='$winfo',`wAge`='$wage',
+            `waddress`='$waddress',`wtel`='$wtel',`wexp`='$wexp',`wskills`='$skills',`wlang`='$langs'  WHERE `wid` = '$id'");
 
           if($resultwork && $result){
             //redirectig to the display page.
@@ -319,7 +329,8 @@
           $ctel = stripslashes($_POST['ctel']);
           $ctel = mysqli_real_escape_string($mysqli,$ctel);
 
-          $resultcomp = mysqli_query($mysqli, "UPDATE comptab SET cname='$cname',cabout='$cabout',caddress='$caddress',ctel='$ctel' WHERE cid=$id");
+          $resultcomp = $mysqli->query("UPDATE comptab SET cname='$cname',cabout='$cabout',caddress='$caddress',ctel='$ctel' WHERE cid=$id");
+
           if($resultcomp && $result ){
             //redirectig to the display page.
             echo "<th><font color='green'>Success, Company profile completed</th>";
@@ -340,30 +351,4 @@
         }
       } ?>
 
-      <script type="text/javascript">
-      // Input adding function
-      function addInput() {
-        $('#inputs').append('<input type="text" name="skills[]">');
-      }
-      function addInputlang() {
-        $('#inputslang').append('<input type="text" name="languages[]">');
-      }
-      function removeskillInput() {
-        $('#inputs input').remove('input:last-child');
-      }
-      function removelangInput() {
-        $('#inputslang input').remove('input:last-child');
-      }
-
-      // Event handler and the first input
-      $(document).ready(function () {
-        $('#adder').click(addInput);
-        //addInput();
-        $('#adderlang').click(addInputlang);
-        //addInputlang();
-        $('#remove').click(removeskillInput);
-        $('#removelang').click(removelangInput);
-      });
-
-    </script>
     <?php include 'footer.php';?>

@@ -42,7 +42,8 @@
                         <td>Skills</td>
                         <td id="inputs">
                           <?php $s = 0;
-                          while($skill){?>
+                          $ns = count($skill);
+                          while($ns >= $s){?>
                             <input type="text" name="skills[]" value="<?php //echo $skill[$s];?>" required>
                             <?php $s = $s + 1;
                           } ?>
@@ -57,7 +58,8 @@
                         <td style="border-top: 1px solid #999;">Known Languages</td>
                         <td id="inputslang" style="border-top: 1px solid #999;">
                           <?php $l = 0;
-                          while($lang){?>
+                          $nl = count($lang);
+                          while($nl >= $l){?>
                             <input type="text" name="languages[]" value="<?php //echo $lang[$l];?>" required>
                             <?php $l = $l + 1;
                           } ?>
@@ -133,30 +135,4 @@
         }
 
         ?>
-        <script type="text/javascript">
-        // Input adding function
-        function addInput() {
-          $('#inputs').append('<input type="text" name="skills[]">');
-        }
-        function addInputlang() {
-          $('#inputslang').append('<input type="text" name="languages[]">');
-        }
-        function removeskillInput() {
-          $('#inputs input').remove('input:last-child');
-        }
-        function removelangInput() {
-          $('#inputslang input').remove('input:last-child');
-        }
-
-        // Event handler and the first input
-        $(document).ready(function () {
-          $('#adder').click(addInput);
-          //addInput();
-          $('#adderlang').click(addInputlang);
-          //addInputlang();
-          $('#remove').click(removeskillInput);
-          $('#removelang').click(removelangInput);
-        });
-
-      </script>
         <?php include 'footer.php';?>

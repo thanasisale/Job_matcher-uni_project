@@ -45,9 +45,9 @@
             <tr>
               <td>Graduation Level Needed</td>
               <td>
-                <input type="radio" name="jgradlvl" value="under" <?php if (isset($jgradlvl) && $jgradlvl=="under") echo "checked";?> >Undergraduate
-                <input type="radio" name="jgradlvl" value="bachelor" <?php if (isset($jgradlvl) && $jgradlvl=="bachelor") echo "checked";?> >Bachelor
-                <input type="radio" name="jgradlvl" value="master" <?php if (isset($jgradlvl) && $jgradlvl=="master") echo "checked";?> >Master
+                <input type="radio" name="jgradlvl" value=1 <?php if (isset($jgradlvl) && $jgradlvl== 1) echo "checked";?> >Undergraduate
+                <input type="radio" name="jgradlvl" value=2 <?php if (isset($jgradlvl) && $jgradlvl== 2) echo "checked";?> >Bachelor
+                <input type="radio" name="jgradlvl" value=3 <?php if (isset($jgradlvl) && $jgradlvl== 3) echo "checked";?> >Master
               </td>
             </tr>
 
@@ -60,7 +60,8 @@
               <td>Skills</td>
               <td id="inputs">
                 <?php $s = 0;
-                while($skill){?>
+                $ns = count($skill);
+                while($ns >= $s){?>
                   <input type="text" name="skills[]" value="<?php echo $skill[$s];?>" required>
                   <?php $s = $s + 1;
                 } ?>
@@ -75,7 +76,8 @@
               <td style="border-top: 1px solid #999;">Known Languages</td>
               <td id="inputslang" style="border-top: 1px solid #999;">
                 <?php $l = 0;
-                while($lang){?>
+                $nl = count($lang);
+                while($nl >= $l){?>
                   <input type="text" name="languages[]" value="<?php echo $lang[$l];?>" required>
                   <?php $l = $l + 1;
                 } ?>
@@ -151,30 +153,5 @@
         echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
       }
       ?>
-      <script type="text/javascript">
-      // Input adding function
-      function addInput() {
-        $('#inputs').append('<input type="text" name="skills[]">');
-      }
-      function addInputlang() {
-        $('#inputslang').append('<input type="text" name="languages[]">');
-      }
-      function removeskillInput() {
-        $('#inputs input').remove('input:last-child');
-      }
-      function removelangInput() {
-        $('#inputslang input').remove('input:last-child');
-      }
 
-      // Event handler and the first input
-      $(document).ready(function () {
-        $('#adder').click(addInput);
-        //addInput();
-        $('#adderlang').click(addInputlang);
-        //addInputlang();
-        $('#remove').click(removeskillInput);
-        $('#removelang').click(removelangInput);
-      });
-
-    </script>
     <?php include 'footer.php';?>
