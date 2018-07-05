@@ -55,7 +55,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE email='$email'") or
                       </tr>
                       <tr>
                           <th>Age</th>
-                          <?php echo "<td>".$reswork['wage']."</td>"; ?>
+                          <?php echo "<td>".$reswork['wAge']."</td>"; ?>
                       </tr>
                       <tr>
                           <th>Address</th>
