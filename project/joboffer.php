@@ -8,7 +8,9 @@ $jid = $_GET['jid'];
 $id = $_GET['id'];
 
 
-$result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE ID='$id'") or die(mysql_error());
+
+
+$result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE id='$id'") or die(mysql_error());
 ?>
 
         <title>Job Offer</title>
@@ -21,13 +23,14 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE ID='$id'") or die(m
               <table>
 
                 <?php
+
                   while($res = mysqli_fetch_array($result)) {
-                    $email = $res['Email'];
-                    $pass = $res['Pass'];
-                    $type = $res['Type'];
+                    $email = $res['email'];
+                    $pass = $res['pass'];
+                    $type = $res['type'];
                   } ?>
 
-                  <?php $resultoffer = mysqli_query($mysqli, "SELECT * FROM jobOffer WHERE jid = '$id'") or die(mysqli_error());
+                  <?php $resultoffer = mysqli_query($mysqli, "SELECT * FROM jobOffer WHERE jid = '$jid'") or die(mysqli_error());
 
                   while($resoffer = mysqli_fetch_array($resultoffer)){ ?>
 
@@ -53,7 +56,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE ID='$id'") or die(m
 
                     <tr>
                       <th>Work Experience Needed</th>
-                      <?php echo "<td>".$resoffer['jexp']."</td>"; ?>
+                      <?php echo "<td>".$resoffer['jexp']." Months</td>"; ?>
                     </tr>
 
                     <tr>
@@ -102,9 +105,10 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE ID='$id'") or die(m
                         <?php echo "<td>".$mail."</td>"; ?>
                     </tr>
 
+
                     <?php
                   }
-                  if( ($type =='company') && ($cid == $id)){?>
+                  if( ($type ==='company') && ($cid === $id)){?>
 
                     <tr>
                       <th>Edit the offer</th>

@@ -14,6 +14,8 @@
           $('#inputslang input').remove('input:last-child');
         }
 
+
+
         // Event handler and the first input
         $(document).ready(function () {
           $('#adder').click(addInput);
@@ -22,6 +24,7 @@
           //addInputlang();
           $('#remove').click(removeskillInput);
           $('#removelang').click(removelangInput);
+
         });
       </script>
     </body>

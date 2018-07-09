@@ -14,8 +14,6 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE email='$email'") or
 
         <div class="profile">
 
-            <!--<div class="redirect"><a class="redirect" href="add.php">Add New Data</a></div>-->
-
             <div class="title"><h3>Your Profile</h3></div>
               <table>
 
@@ -71,19 +69,19 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE email='$email'") or
                       </tr>
                       <tr>
                           <th>Your work Experience</th>
-                          <?php echo "<td>".$reswork['wexp']."</td>"; ?>
+                          <?php echo "<td>".$reswork['wexp']." Months</td>"; ?>
                       </tr>
                       <tr>
                           <th>Known Languages</th>
                           <?php echo "<td>".$reswork['wlang']."</td>"; ?>
                       </tr>
                       <tr>
-                          <th>Basic info</th>
-                          <?php echo "<td>".$reswork['winfo']."</td>"; ?>
-                      </tr>
-                      <tr>
                           <th>Your work skills</th>
                           <?php echo "<td>".$reswork['wskills']."</td>"; ?>
+                      </tr>
+                      <tr>
+                          <th>Basic info</th>
+                          <?php echo "<td>".$reswork['winfo']."</td>"; ?>
                       </tr>
 
                     <?php }
@@ -115,7 +113,7 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE email='$email'") or
                       </tr>
                       <tr>
                         <th>Add Job Offer</th>
-                        <?php echo "<td><a href=\"createjob.php?id=$id\">New Job</a></td>"; ?>
+                        <?php echo "<td><a href=\"createjob.php?id=$id\">New Job Offer</a></td>"; ?>
                       </tr>
 
                     <?php }
@@ -126,21 +124,22 @@ $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE email='$email'") or
                     <?php echo "<td><a href=\"edit.php?id=$id\">Edit</a> | <a href=\"delete.php?id=$id\" onClick=\"return confirm('Are you sure you want to delete this?')\">Delete</a></td>"; ?>
                   </tr>
 
-                  <?php $offers = mysqli_query($mysqli, "SELECT * FROM jobOffer WHERE cid = '$id' ORDER BY jid DESC") or die(mysqli_error());
+                  <?php $offers = mysqli_query($mysqli, "SELECT * FROM jobOffer WHERE cid = '$id' ORDER BY jid DESC");
                   $rowcount = mysqli_num_rows($offers);
-
-                  if($rowcount>0){ ?>
-                  <div class="title"><h5>Αγγελίες εργασίας</h5></div>
-                  <table>
+                  ?>
+                  <table class="oftab">
+                    <div class="title"style="margin-top: 5%;"><h3>Job Offers</h3></div>
                       <?php
+                      if($rowcount>0){
                       //Showing the db records
                       while($offer = mysqli_fetch_array($offers)) {
                         echo "<tr>";
                         echo "<th>".$offer['jtittle']."</th>";
+                        echo "<th>".$offer['jloc']."</th>";
                         echo "<td><a href=\"joboffer.php?jid=$offer[jid]&id=$id\">View</a></td>";
                       }
                   mysqli_free_result($offers);
-                    }
+                }else{echo"<th>No Offers Available.</th>";}
                     ?>
                   </table>
                 <?php }?>

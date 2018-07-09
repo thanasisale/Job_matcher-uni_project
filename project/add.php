@@ -75,6 +75,10 @@
                 if($result){
                     echo "<font color='green'>Data added successfully.";
                     echo "<br/><a href='profile.php'>View Result</a>";
+                    echo "<script>
+                    var element = document.querySelector('.add');
+                        removeJunk(element);
+                    </script>";
                 }else{
                     echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
                 }

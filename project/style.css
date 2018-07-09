@@ -93,8 +93,25 @@ body{
     border-top: 1px solid #999;
     border-bottom: 1px solid #999;
 }
+.profile table th{
+	width: 30%;
+}
+.profile table td a{
+	color: blue;
+	font-weight: bold;
+}
+.profile table td a:hover{
+	text-shadow: 1px 1px 1px #cacaca
+}
 .profile table tr:hover {
-    background-color: #f5f5f5;
+    background-color: #fdfdfd;
+		-webkit-box-shadow: 1px 2px 1px 0px #e6e6e6;
+		-moz-box-shadow: 1px 2px 1px 0px #e6e6e6;
+		box-shadow: 1px 2px 1px 0px #e6e6e6;
+}
+
+.profile table.oftab th{
+	background-color: #fff;
 }
 
 /*Add-New-Page/Edit-Page css*/

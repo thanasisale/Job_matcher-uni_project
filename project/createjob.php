@@ -1,6 +1,6 @@
 <?php include 'head.php'; ?>
 
-    <?php $cid = $_GET['id']; ?>
+    <?php $cid = $_GET['id'];  ?>
 
     <title>Create New Job Offer</title>
 
@@ -41,12 +41,12 @@
                       <tr>
                         <td>Skills</td>
                         <td id="inputs">
-                          <?php $s = 0;
-                          $ns = count($skill);
-                          while($ns >= $s){?>
-                            <input type="text" name="skills[]" value="<?php //echo $skill[$s];?>" required>
-                            <?php $s = $s + 1;
-                          } ?>
+                          <input type="text" name="skills[]" value="" required />
+                    <?php foreach ($skills as $sk): ?>
+                        <input type="text" name="skills[]" value="<?php //echo $sk;?>" required />
+                    <?php endforeach; ?>
+
+
                         </td>
                         <td style="width:5%;border:none;">
                           <a class="btn" id="adder" href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
@@ -56,14 +56,14 @@
 
                       <tr>
                         <td style="border-top: 1px solid #999;">Known Languages</td>
+
                         <td id="inputslang" style="border-top: 1px solid #999;">
-                          <?php $l = 0;
-                          $nl = count($lang);
-                          while($nl >= $l){?>
-                            <input type="text" name="languages[]" value="<?php //echo $lang[$l];?>" required>
-                            <?php $l = $l + 1;
-                          } ?>
+                          <input type="text" name="languages[]" value="<?php //echo $la;?>" required />
+                          <?php foreach ($lang as $la): ?>
+                              <input type="text" name="languages[]" value="<?php //echo $la;?>" required />
+                          <?php endforeach; ?>
                         </td>
+
                         <td style="width:5%;border:none;">
                           <a class="btn" id="adderlang" href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
                           <a class="btn" id="removelang" href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
@@ -80,6 +80,8 @@
                         <td class="btn"><input type="submit" name="Submit" value="Submit"></td>
                     </tr>
                 </table>
+                <?php // Store cid in form ?>
+                <input type="hidden" name="cid" value="<?php echo $cid ?>">
             </form>
 
         </div>
@@ -105,32 +107,33 @@
           $jexp = stripslashes($_POST['jexp']);
           $jexp = mysqli_real_escape_string($mysqli,$jexp);
 
-          $cid = $_POST['id'];
+          $cid = stripslashes($_POST['cid']);
+          $cid = mysqli_real_escape_string($mysqli,$cid);
 
-          $s2 = 0;
-          while($s2 <= $s){
-            $skill[$s2] = stripslashes($_POST['skills']);
-            $s2 = $s2 + 1;
-          }
-          //making the arrays to a string seperated by "," using implode
-          $skills = implode(",", $skill);
+          $skills = implode("*", $_POST['skills']);
+          $skills = stripslashes($skills);
           $skills = mysqli_real_escape_string($mysqli,$skills);
 
-          $l2 = 0;
-          while($l2 <= $l){
-            $lang[$l2] = stripslashes($_POST['languages']);
-            $l2 = $l2 + 1;
-          }
-          $langs = implode(",", $lang);
+          $langs = implode("*", $_POST['languages']);
+          $langs = stripslashes($langs);
           $langs = mysqli_real_escape_string($mysqli,$langs);
 
-          $result = mysqli_query($mysqli, "INSERT INTO jobOffer(jtittle,jinfo,jskills,jgradlvl,jexp,jlang,jloc,cid) VALUES('$jtittle','$jinfo','$skills','$jgradlvl','$jexp','$langs','$jloc','$cid')");
+          $result = $mysqli->query("INSERT INTO jobOffer (jtittle, jinfo, jskills, jgradlvl, jexp, jlang, jloc, cid) VALUES ('$jtittle','$jinfo','$skills','$jgradlvl','$jexp','$langs','$jloc','$cid')");
 
           if($result){
-            echo "<font color='green'>Data added successfully.";
+
+            echo "<font color='green'>Offer created successfully.";
             echo "<br/><a href='profile.php'>Go to Profile</a>";
+            echo "<script>
+            var element = document.querySelector('.add');
+                removeJunk(element);
+            </script>";
           }else{
             echo "<div class='title' style='color:red;'><h3>Error!Try again later.</h3></div>";
+            echo "<script>
+            var element = document.querySelector('.add');
+                removeJunk(element);
+            </script>";
           }
         }
 

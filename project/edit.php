@@ -154,34 +154,32 @@
             <tr>
               <td>Skills</td>
               <td id="inputs">
-                <?php $s = 0;
-                $ns = count($skill);
-                while( $ns >= $s ){?>
-                  <input type="text" name="skills[]" value="<?php echo $skill[$s];?>">
-                  <?php $s = $s + 1;
-                } ?>
+
+              <?php foreach ($skill as $sk): ?>
+                  <input type="text" name="skills[]" value="<?php echo $sk;?>">
+              <?php endforeach; ?>
+
               </td>
 
               <td style="width:5%;border:none;">
-                <a class="btn" id="adder" href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
-                <a class="btn" id="remove" href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
+                <a class="btn" id="adder" href="javascript:void(0);"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
+                <a class="btn" id="remove" href="javascript:void(0);"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
               </td>
             </tr>
 
             <tr>
               <td style="border-top: 1px solid #999;">Known Languages</td>
               <td id="inputslang" style="border-top: 1px solid #999;">
-                <?php $l = 0;
-                $nl = count($lang);
-                while($nl >= $l){?>
-                  <input type="text" name="languages[]" value="<?php echo $lang[$l];?>" >
-                  <?php $l = $l + 1;
-                } ?>
+
+                <?php foreach ($lang as $la): ?>
+                  <input type="text" name="languages[]" value="<?php echo $la;?>" >
+                <?php endforeach; ?>
+
               </td>
 
               <td style="width:5%;border:none;">
-                <a class="btn" id="adderlang" href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
-                <a class="btn" id="removelang" href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
+                <a class="btn" id="adderlang" href="javascript:void(0);"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
+                <a class="btn" id="removelang" href="javascript:void(0);"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
               </td>
             </tr>
 
@@ -311,8 +309,16 @@
             //redirectig to the display page.
             echo "<th><font color='green'>Success, Worker profile completed</th>";
             echo "<td><a href=\"profile.php\">Go to Profile</a></td>";
+            echo "<script>
+            var element = document.querySelector('.edit');
+                removeJunk(element);
+            </script>";
           }else{
               echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
+              echo "<script>
+              var element = document.querySelector('.edit');
+                  removeJunk(element);
+              </script>";
           }
 
         }elseif ($type == 'company') {
@@ -335,8 +341,16 @@
             //redirectig to the display page.
             echo "<th><font color='green'>Success, Company profile completed</th>";
             echo "<td><a href=\"profile.php\">Go to Profile</a></td>";
+            echo "<script>
+            var element = document.querySelector('.edit');
+                removeJunk(element);
+            </script>";
           }else{
               echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
+              echo "<script>
+              var element = document.querySelector('.edit');
+                  removeJunk(element);
+              </script>";
           }
 
         }else{
@@ -345,8 +359,16 @@
             //redirectig to the display page.
             echo "<th><font color='green'>Success, but your Profile is not Full yet</th>";
             echo "<td><a href=\"profile.php\">Go to Profile</a></td>";
+            echo "<script>
+            var element = document.querySelector('.edit');
+                removeJunk(element);
+            </script>";
           }else{
               echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
+              echo "<script>
+              var element = document.querySelector('.edit');
+                  removeJunk(element);
+              </script>";
           }
         }
       } ?>
