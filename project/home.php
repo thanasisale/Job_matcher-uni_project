@@ -1,35 +1,41 @@
-<?php
+<?php/*
 //including the database connection file
 include 'head.php';
 include 'auth.php';
-//include 'automach.php';
-//fetching data in descending order (lastest entry first)
+include 'automach.php';
+//fetching data in ascending order (first entry first)
 
-$result = mysqli_query($mysqli, "SELECT * FROM usertab ORDER BY id DESC"); // using mysqli_query
+$resultall = mysqli_query($mysqli, "SELECT * FROM usertab WHERE ID = $wid ORDER BY ID ASC"); // using mysqli_query
+while($restall = mysqli_fetch_array($restall)){
+  $email = $restall['email'];
+}
 ?>
 
-        <title>Homepage</title>
+
+        <title>Result Page</title>
 
         <div class="home">
 
             <div class="title"><h3>Αποτελέσματα</h3></div>
             <table>
                 <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                     <th>Email</th>
-                    <th>Password</th>
-                    <th>Type</th>
-                    <?php //<th>Update</th> ?>
                 </tr>
                 <?php
                 //Showing the db records
-                while($res = mysqli_fetch_array($result)) {
-                    echo "<tr>";
-                    echo "<td>".$res['email']."</td>";
-                    echo "<td>".'<input type="password" value='.$res["pass"].' disabled>'."</td>";
-                    echo "<td>".$res['type']."</td>";
-                    //echo "<td><a href=\"edit.php?id=$res[id]\">Edit</a> | <a href=\"delete.php?id=$res[id]\" onClick=\"return confirm('Are you sure you want to delete this?')\">Delete</a></td>";
+                $i = 0;
+                while ($i <= $n) {
+                  echo "<tr>";
+                  echo "<td>".$wfname[$i]."</td>";
+                  echo "<td>".$wlname[$i]."</td>";
+                  echo "<td>".$email[$i]."</td>";
+                  echo "<td><a href=\"profile.php?id=$wid[$i]\">View</a>";
+                  $i = $i + 1;
                 }
+
                 ?>
             </table>
         </div>
-        <?php include 'footer.php';?>
+        <?php include 'footer.php';*/?>

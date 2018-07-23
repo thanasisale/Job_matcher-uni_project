@@ -1,8 +1,11 @@
-<?php include 'head.php';?>
+<?php
+include 'head.php';
+include("auth.php");
+?>
     <?php
     //getting id from url
     $id = $_GET['id'];
-    //selecting data associated with this particular id
+    //selecting data associated with this id
     $result = mysqli_query($mysqli, "SELECT * FROM usertab WHERE ID=$id");
 
 
@@ -12,6 +15,7 @@
       $type = $res['type'];
     }
 
+    //freeing the var
     mysqli_free_result($result);
 
     //if there is no record in the DB fo this id and the type is worker/company we create one
@@ -30,8 +34,7 @@
           $wgradlvl = $reswork['wgradlvl'];
           $wexp = $reswork['wexp'];
           $winfo = $reswork['winfo'];
-          //making the strings to arrays using "," as a delimeter using explode
-          //$skills = explode(" ", $reswork['wskills']);
+          //making the strings to arrays using "*" as a delimeter using explode
           $skills = $reswork['wskills'];
           $skill = explode("*", $skills);
           $langs = $reswork['wlang'];
@@ -45,6 +48,7 @@
         mysqli_free_result($resultworkin);
 
       }
+
     }elseif( $type == 'company'){
 
       $resultcomp = mysqli_query($mysqli, "SELECT * FROM comptab WHERE comptab.cid = " . $id);
@@ -66,311 +70,376 @@
         mysqli_free_result($resultcompin);
 
       }
-    }
+    }//End user finder
     ?>
 
     <title>Edit Data</title>
 
-    <div class="edit">
+    <div class="edit container">
 
-      <div class="title"><h3>Here You can edit Your Profile!</h3></div>
+      <div class="customform">
 
-      <form name="form1" method="POST" action="edit.php">
-        <table border="0">
+        <form name="form1" method="POST" action="edit.php">
 
-          <tr>
-            <td>Email</td>
-            <td><input type="text" name="email" value="<?php echo $email;?>"></td>
-          </tr>
+          <fieldset>
 
-          <tr>
-            <td>Password</td>
-            <td><input type="password" name="pass" value="<?php echo $pass;?>"></td>
-          </tr>
+            <legend class="text-center">Here You can edit Your Profile!</legend>
+            <div class="form-group">
+              <label for="Email">Email address</label>
+              <input type="text" name="email" class="form-control" id="Email" placeholder="Enter email" value="<?php echo $email; ?>" required>
+            </div>
 
-          <tr>
-            <td>Type</td>
-            <td>
-              <input type="radio" name="type" value="company" <?php if (isset($type) && $type=="company") echo "checked";?> >Company
-              <input type="radio" name="type" value="worker" <?php if (isset($type) && $type=="worker") echo "checked";?> >Worker
-            </td>
-          </tr>
+            <div class="form-group">
+              <label for="Password">Password</label>
+              <input type="password" name="pass" class="form-control" id="Password" placeholder="Password" value="<?php echo $pass;?>" required>
+            </div>
 
-          <?php
-          if($type == "worker"){ ?>
+            <label for="radio">Type</label>
+            <fieldset class="form-group" id="radio">
+              <div class="form-check">
+                <label class="form-check-label radio-inline">
+                  <input type="radio" class="form-check-input" name="type" id="option1" value="company"<?php if (isset($type) && $type=="company") echo "checked";?>>Company
+                </label>
+              </div>
 
-            <tr>
-              <td>First Name</td>
-              <td><input type="text" name="wname" value="<?php echo $wfname;?>"></td>
-            </tr>
+              <div class="form-check">
+                <label class="form-check-label radio-inline">
+                  <input type="radio" class="form-check-input" name="type" id="option2" value="worker" <?php if (isset($type) && $type=="worker") echo "checked";?>>Worker
+                </label>
+              </div>
+            </fieldset>
+            <?php
+            if($type == "worker"){ ?>
 
-            <tr>
-              <td>Last Name</td>
-              <td><input type="text" name="wlname" value="<?php echo $wlname;?>"></td>
-            </tr>
+              <div class="form-group">
+                <label for="name">First Name</label>
+                <input type="text" name="wname" class="form-control" id="name" placeholder="Enter the title" value="<?php echo $wfname; ?>" required>
+              </div>
 
-            <tr>
-              <td>Graduation Level</td>
-              <td>
-                <input type="radio" name="wgradlvl" value='under' <?php if (isset($wgradlvl) && $wgradlvl=="under") echo "checked";?> >Undergraduate
-                <input type="radio" name="wgradlvl" value='bachelor' <?php if (isset($wgradlvl) && $wgradlvl=="bachelor") echo "checked";?> >Bachelor
-                <input type="radio" name="wgradlvl" value='master' <?php if (isset($wgradlvl) && $wgradlvl=="master") echo "checked";?> >Master
-              </td>
-            </tr>
+              <div class="form-group">
+                <label for="lname">Last Name</label>
+                <input type="text" name="wlname" class="form-control" id="lname" placeholder="Enter the title" value="<?php echo $wlname; ?>" required>
+              </div>
 
-            <tr>
-              <td>Basic info</td>
-              <td>
-                <textarea name="winfo" rows="5" cols="30"><?php echo $winfo; ?></textarea>
-              </td>
-            </tr>
+              <label for="radio">Graduation Level</label>
 
-            <tr>
-              <td>Age</td>
+              <fieldset class="form-group" id="radio">
 
-              <?php //fixing the date format to be able to be shown
-              $fwage = date("Y-m-d", strtotime($wage));
-              $wage = $fwage; ?>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="wgradlvl" id="option1" value="under" <?php if (isset($wgradlvl) && $wgradlvl== 'under') echo "checked";?>>Undergraduate
+                  </label>
+                </div>
 
-              <td><input type="date" name="wAge" value="<?php echo $wage;?>"></td>
-            </tr>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="wgradlvl" id="option2" value="bachelor" <?php if (isset($wgradlvl) && $wgradlvl== 'bachelor') echo "checked";?>>Bachelor
+                  </label>
+                </div>
 
-            <tr>
-              <td>Address</td>
-              <td><input type="text" name="waddress" value="<?php echo $waddress;?>"></td>
-            </tr>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="wgradlvl" id="option2" value="master" <?php if (isset($wgradlvl) && $wgradlvl== 'master') echo "checked";?>>Master
+                  </label>
+                </div>
 
-            <tr>
-              <td>Phone</td>
-              <td><input type="text" name="wtel" value="<?php echo $wtel;?>"></td>
-            </tr>
+              </fieldset>
 
-            <tr>
-              <td>Your work Experience</td>
-              <td><input type="number" name="wexp" value="<?php echo $wexp;?>"> Months</td>
-            </tr>
+              <div class="form-group">
+                <label for="Textarea">Basic info</label>
+                <textarea name="winfo" class="form-control" id="Textarea" rows="3"><?php echo $winfo; ?></textarea>
+              </div>
+
+              <div class="form-group">
+
+                <label for="wAge">Age</label>
+
+                <?php //fixing the date format to be able to be shown
+                $fwage = date("Y-m-d", strtotime($wage));
+                $wage = $fwage; ?>
+
+                <input type="date" name="wAge" class="form-control" id="wAge" placeholder="Age" value="<?php echo $wage;?>" required>
+
+              </div>
+
+              <div class="form-group">
+                <label for="waddress">Address</label>
+                <input type="text" name="waddress" class="form-control" id="waddress" placeholder="Enter your address" value="<?php echo $waddress;?>" required>
+              </div>
+
+              <div class="form-group">
+                <label for="wtel">Phone</label>
+                <input type="number" name="wtel" class="form-control" id="wtel" placeholder="telephone" value="<?php echo $wtel;?>" required>
+              </div>
+
+              <div class="form-group">
+                <label for="wexp">Your work Experience</label>
+                <input type="number" name="wexp" class="form-control" id="wexp" placeholder="Months" value="<?php echo $wexp;?>" required>
+              </div>
+
+              <label for="wskills">Your Skills</label>
+              <div class="form-group">
+
+                <div id="inputs">
+
+                  <?php foreach ($skill as $sk): ?>
+                    <input type="text" name="skills[]" class="form-control" id="skills" placeholder="Enter a skill" value="<?php echo $sk; ?>">
+                  <?php endforeach; ?>
+
+                </div>
+
+                <div class="plusminus">
+                  <a class="btn" id="adder" href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
+                  <a class="btn" id="remove" href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
+                </div>
+
+              </div>
+
+              <label for="lang">Known Languages</label>
+              <div class="form-group">
+
+                <div id="inputslang">
+                  <?php foreach ($lang as $la): ?>
+                    <input type="text" name="languages[]" class="form-control" id="lang" placeholder="Enter a language" value="<?php echo $la;?>">
+                  <?php endforeach; ?>
+                </div>
+
+                <div class="plusminus">
+                  <a class="btn" id="adderlang" href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
+                  <a class="btn" id="removelang" href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
+                </div>
+
+              </div>
 
 
-            <tr>
-              <td>Skills</td>
-              <td id="inputs">
+            <?php }elseif($type == 'company'){ ?>
 
-              <?php foreach ($skill as $sk): ?>
-                  <input type="text" name="skills[]" value="<?php echo $sk;?>">
-              <?php endforeach; ?>
+              <div class="form-group">
+                <label for="cname">Company Name</label>
+                <input type="text" name="cname" class="form-control" id="cname" placeholder="Enter the Name of the Company" value="<?php echo $cname; ?>" required>
+              </div>
 
-              </td>
+              <div class="form-group">
+                <label for="cabout">About the Company</label>
+                <textarea name="cabout" class="form-control" id="cabout" rows="3"><?php echo $cabout; ?></textarea>
+              </div>
 
-              <td style="width:5%;border:none;">
-                <a class="btn" id="adder" href="javascript:void(0);"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
-                <a class="btn" id="remove" href="javascript:void(0);"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
-              </td>
-            </tr>
+              <div class="form-group">
+                <label for="caddress">Address</label>
+                <input type="text" name="caddress" class="form-control" id="caddress" placeholder="Enter the Address" value="<?php echo $caddress;?>" required>
+              </div>
 
-            <tr>
-              <td style="border-top: 1px solid #999;">Known Languages</td>
-              <td id="inputslang" style="border-top: 1px solid #999;">
+              <div class="form-group">
+                <label for="ctel">Phone Number</label>
+                <input type="text" name="ctel" class="form-control" id="ctel" placeholder="telephone" value="<?php echo $ctel;?>" required>
+              </div>
 
-                <?php foreach ($lang as $la): ?>
-                  <input type="text" name="languages[]" value="<?php echo $la;?>" >
-                <?php endforeach; ?>
+            <?php } ?>
+            <!-- Saving the id for after the submission-->
+            <input type="hidden" name="id" value=<?php echo $_GET['id'];?>>
 
-              </td>
+            <button type="update" name="update" class="btn btn-outline-primary custombtn">Submit</button>
 
-              <td style="width:5%;border:none;">
-                <a class="btn" id="adderlang" href="javascript:void(0);"><i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#0000a5;"></i></a>
-                <a class="btn" id="removelang" href="javascript:void(0);"><i class="fa fa-minus-circle fa-2x" aria-hidden="true" style="vertical-align: middle;color:#c30000;"></i></a>
-              </td>
-            </tr>
+          </fieldset>
+        </form><!-- End of Form -->
 
-
-          <?php }elseif($type == 'company'){ ?>
-            <tr>
-              <td>Company Name</td>
-
-              <td><input type="text" name="cname" value="<?php echo $cname;?>"></td>
-            </tr>
-
-            <tr>
-              <td>About the Company</td>
-              <td>
-                <textarea name="cabout" rows="5" cols="30" ><?php echo $cabout; ?></textarea>
-              </td>
-            </tr>
-
-            <tr>
-              <td>Address</td>
-              <td><input type="text" name="caddress" value="<?php echo $caddress;?>"></td>
-            </tr>
-
-            <tr>
-              <td>Phone Number</td>
-              <td><input type="text" name="ctel" value="<?php echo $ctel;?>"></td>
-            </tr>
-
-          <?php } ?>
-
-            <tr>
-              <td><input type="hidden" name="id" value=<?php echo $_GET['id'];?>></td>
-              <td class="btn"><input type="submit" name="update" value="Update"></td>
-            </tr>
-
-          </table>
-        </form>
-      </div>
+      </div><!-- End of customform -->
 
       <?php
-
+      //Form Handler
       if(isset($_POST['update'])) {
 
-        $id = $_POST['id'];
+          $id = $_POST['id'];
 
-        //making sure for the content,by removing slashes,preventing sqlinjections
+          //making sure for the content,by removing slashes,preventing sqlinjections and preparing the statements
+          $email = stripslashes($_POST['email']);
+          $email = mysqli_real_escape_string($mysqli,$email);
 
-        $email = stripslashes($_POST['email']);
-        $email = mysqli_real_escape_string($mysqli,$email);
+          //Not hashing the password for convenience
+          $pass = stripslashes($_POST['pass']);
+          $pass = mysqli_real_escape_string($mysqli,$pass);
 
-        //Not hashing the password for convenience
-        $pass = stripslashes($_POST['pass']);
-        $pass = mysqli_real_escape_string($mysqli,$pass);
+          $type = $_POST['type'];
 
-        $type = $_POST['type'];
+          // checking empty fields
+          if(empty($pass) || empty($email) || empty($type)) {
 
-        // checking empty fields
-        if(empty($pass) || empty($email) || empty($type)) {
+            if(empty($pass)) { ?>
+              <div class="alert alert-dismissible alert-danger customalert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Password field is empty.</strong> <a href="javascript:self.history.back();" class="alert-link"> try submitting again.</a>
+              </div>
+            <?php }
 
-          if(empty($pass)) {
-            echo "<font color='red'>Password field is empty.</font><br/>";
+            if(empty($email)) { ?>
+
+                <div class="alert alert-dismissible alert-danger customalert">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <strong>Email field is empty.</strong> <a href="javascript:self.history.back();" class="alert-link">try submitting again.</a>
+                </div>
+              <?php }
+
+            if(empty($type)) { ?>
+              <div class="alert alert-dismissible alert-danger customalert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Type field is empty.</strong> <a href="javascript:self.history.back();" class="alert-link">try submitting again.</a>
+              </div>
+            <?php }
+
+           }else{
+
+            //updating the main user table
+            $result = mysqli_query($mysqli, "UPDATE usertab SET email='$email',pass='$pass',type='$type' WHERE ID=$id");
+
           }
 
-          if(empty($email)) {
-            echo "<font color='red'>Email field is empty.</font><br/>";
-          }
+          if($type == 'worker') {
 
-          if(empty($type)) {
-            echo "<font color='red'>Type field is empty.</font><br/>";
-          }
+            //making sure of the content,by removing slashes
+            $wfname = stripslashes($_POST['wname']);
+            $wfname = mysqli_real_escape_string($mysqli,$wfname);
 
-         }else{
+            $wlname = stripslashes($_POST['wlname']);
+            $wlname = mysqli_real_escape_string($mysqli,$wlname);
 
-          //updating the main user table
-          $result = mysqli_query($mysqli, "UPDATE usertab SET email='$email',pass='$pass',type='$type' WHERE ID=$id");
+            $wgradlvl = stripslashes($_POST['wgradlvl']);
+            $wgradlvl = mysqli_real_escape_string($mysqli,$wgradlvl);
 
-        }
+            $winfo = stripslashes($_POST['winfo']);
+            $winfo = mysqli_real_escape_string($mysqli,$winfo);
 
-        if($type == 'worker') {
+            $wage = stripslashes($_POST['wAge']);
+            $wage = mysqli_real_escape_string($mysqli,$wage);
 
-          //making sure of the content,by removing slashes
-          $wfname = stripslashes($_POST['wname']);
-          $wfname = mysqli_real_escape_string($mysqli,$wfname);
+            $waddress = stripslashes($_POST['waddress']);
+            $waddress = mysqli_real_escape_string($mysqli,$waddress);
 
-          $wlname = stripslashes($_POST['wlname']);
-          $wlname = mysqli_real_escape_string($mysqli,$wlname);
+            $wtel = stripslashes($_POST['wtel']);
+            $wtel = mysqli_real_escape_string($mysqli,$wtel);
 
-          $wgradlvl = stripslashes($_POST['wgradlvl']);
-          $wgradlvl = mysqli_real_escape_string($mysqli,$wgradlvl);
-
-          $winfo = stripslashes($_POST['winfo']);
-          $winfo = mysqli_real_escape_string($mysqli,$winfo);
-
-          $wage = stripslashes($_POST['wAge']);
-          $wage = mysqli_real_escape_string($mysqli,$wage);
-
-          $waddress = stripslashes($_POST['waddress']);
-          $waddress = mysqli_real_escape_string($mysqli,$waddress);
-
-          $wtel = stripslashes($_POST['wtel']);
-          $wtel = mysqli_real_escape_string($mysqli,$wtel);
-
-          $wexp = stripslashes($_POST['wexp']);
-          $wexp = mysqli_real_escape_string($mysqli,$wexp);
+            $wexp = stripslashes($_POST['wexp']);
+            $wexp = mysqli_real_escape_string($mysqli,$wexp);
 
 
-          //making the arrays to a string seperated by "*" using implode
-          $skills = implode("*", $_POST['skills']);
-          $skills = stripslashes($skills);
-          $skills = mysqli_real_escape_string($mysqli,$skills);
+            //making the arrays to a string seperated by "*" using implode
+            $skills = implode("*", $_POST['skills']);
+            $skills = stripslashes($skills);
+            $skills = mysqli_real_escape_string($mysqli,$skills);
 
-          /*$l2 = 0;
-          while($l2 <= $l){
+            $langs = implode("*", $_POST['languages']);
+            $langs = stripslashes($langs);
+            $langs = mysqli_real_escape_string($mysqli,$langs);
 
-            $l2 = $l2 + 1;
-          }*/
 
-          $langs = implode("*", $_POST['languages']);
-          $langs = stripslashes($langs);
-          $langs = mysqli_real_escape_string($mysqli,$langs);
+            //updating the worker table
+            $resultwork = mysqli_query($mysqli,"UPDATE `worker` SET `wname`='$wfname',`wlname`='$wlname',`wgradlvl`='$wgradlvl',`winfo`='$winfo',`wAge`='$wage',
+              `waddress`='$waddress',`wtel`='$wtel',`wexp`='$wexp',`wskills`='$skills',`wlang`='$langs'  WHERE `wid` = '$id'");
 
-          //updating the worker table
-          $resultwork = mysqli_query($mysqli,"UPDATE `worker` SET `wname`='$wfname',`wlname`='$wlname',`wgradlvl`='$wgradlvl',`winfo`='$winfo',`wAge`='$wage',
-            `waddress`='$waddress',`wtel`='$wtel',`wexp`='$wexp',`wskills`='$skills',`wlang`='$langs'  WHERE `wid` = '$id'");
 
-          if($resultwork && $result){
-            //redirectig to the display page.
-            echo "<th><font color='green'>Success, Worker profile completed</th>";
-            echo "<td><a href=\"profile.php\">Go to Profile</a></td>";
-            echo "<script>
-            var element = document.querySelector('.edit');
+            if($resultwork && $result){ ?>
+              <div class="alert alert-dismissible alert-success customalert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Success, Worker profile completed</strong><a href="profile.php" class="alert-link">Go to your profile</a>
+              </div>
+
+              <!--Script to remove the form after submission -->
+              <script>
+                var element = document.querySelector('.customform');
                 removeJunk(element);
-            </script>";
-          }else{
-              echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
-              echo "<script>
-              var element = document.querySelector('.edit');
-                  removeJunk(element);
-              </script>";
-          }
+              </script>
+            <?php }else{ ?>
 
-        }elseif ($type == 'company') {
+              <div class="alert alert-dismissible alert-success customalert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>DataBaseError!Try again later.</strong> <a href="profile.php" class="alert-link">Go to your profile</a>
+              </div>
 
-          $cname = stripslashes($_POST['cname']);
-          $cname = mysqli_real_escape_string($mysqli,$cname);
+              <!--Script to remove the form after submission -->
+              <script>
+                var element = document.querySelector('.customform');                    removeJunk(element);
+              </script>
 
-          $cabout = stripslashes($_POST['cabout']);
-          $cabout = mysqli_real_escape_string($mysqli,$cabout);
+            <?php }
+            mysqli_free_result($resultwork);
 
-          $caddress = stripslashes($_POST['caddress']);
-          $caddress = mysqli_real_escape_string($mysqli,$caddress);
+          }elseif ($type == 'company') {
 
-          $ctel = stripslashes($_POST['ctel']);
-          $ctel = mysqli_real_escape_string($mysqli,$ctel);
+            $cname = stripslashes($_POST['cname']);
+            $cname = mysqli_real_escape_string($mysqli,$cname);
 
-          $resultcomp = $mysqli->query("UPDATE comptab SET cname='$cname',cabout='$cabout',caddress='$caddress',ctel='$ctel' WHERE cid=$id");
+            $cabout = stripslashes($_POST['cabout']);
+            $cabout = mysqli_real_escape_string($mysqli,$cabout);
 
-          if($resultcomp && $result ){
-            //redirectig to the display page.
-            echo "<th><font color='green'>Success, Company profile completed</th>";
-            echo "<td><a href=\"profile.php\">Go to Profile</a></td>";
-            echo "<script>
-            var element = document.querySelector('.edit');
-                removeJunk(element);
-            </script>";
-          }else{
-              echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
-              echo "<script>
-              var element = document.querySelector('.edit');
-                  removeJunk(element);
-              </script>";
-          }
+            $caddress = stripslashes($_POST['caddress']);
+            $caddress = mysqli_real_escape_string($mysqli,$caddress);
 
-        }else{
+            $ctel = stripslashes($_POST['ctel']);
+            $ctel = mysqli_real_escape_string($mysqli,$ctel);
 
-          if($result){
-            //redirectig to the display page.
-            echo "<th><font color='green'>Success, but your Profile is not Full yet</th>";
-            echo "<td><a href=\"profile.php\">Go to Profile</a></td>";
-            echo "<script>
-            var element = document.querySelector('.edit');
-                removeJunk(element);
-            </script>";
-          }else{
-              echo "<div class='title' style='color:red;'><h3>Error!</h3></div>";
-              echo "<script>
-              var element = document.querySelector('.edit');
-                  removeJunk(element);
-              </script>";
-          }
-        }
-      } ?>
+            $resultcomp = $mysqli->query("UPDATE comptab SET cname='$cname',cabout='$cabout',caddress='$caddress',ctel='$ctel' WHERE cid=$id");
 
-    <?php include 'footer.php';?>
+            if($resultcomp && $result ){ ?>
+
+                <div class="alert alert-dismissible alert-success customalert">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <strong>Success, Company profile completed</strong> <a href="profile.php" class="alert-link">Go to your profile</a>
+                </div>
+
+                <!--Script to remove the form after submission -->
+                <script>
+                var element = document.querySelector('.customform');
+                    removeJunk(element);
+                </script>
+
+              <?php }else{ ?>
+
+                  <div class="alert alert-dismissible alert-success customalert">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>DataBaseError!Try again later.</strong> <a href="profile.php" class="alert-link">Go to your profile</a>
+                  </div>
+
+                  <!--Script to remove the form after submission -->
+                  <script>
+                    var element = document.querySelector('.customform');
+                    removeJunk(element);
+                  </script>
+
+                <?php }
+                mysqli_free_result($resultcomp);
+
+              }else{
+
+                if($result){ ?>
+
+                  <div class="alert alert-dismissible alert-success customalert">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Success, but your Profile is not Full yet</strong> <a href="profile.php" class="alert-link">Go to your profile</a>
+                  </div>
+
+                  <!--Script to remove the form after submission -->
+                  <script>
+                    var element = document.querySelector('.customform');
+                    removeJunk(element);
+                  </script>
+
+                <?php }else{ ?>
+
+                  <div class="alert alert-dismissible alert-success customalert">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>DataBaseError!Try again later.</strong> <a href="profile.php" class="alert-link">Go to your profile</a>
+                  </div>
+
+                  <!--Script to remove the form after submission -->
+                  <script>
+                    var element = document.querySelector('.customform');
+                    removeJunk(element);
+                  </script>
+
+                <?php }
+
+              }//End Company/Worker if
+              mysqli_free_result($result);
+            }//End Form Handler ?>
+
+          </div><!-- Closing Container -->
+          <?php include 'footer.php';?>
