@@ -1,4 +1,4 @@
-# uniprojectone
+# Job Matceer
 Web-app matching users with job offers based on their profile.
 
 ====================== Author details ======================
