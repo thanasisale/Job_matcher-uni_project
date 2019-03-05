@@ -17,8 +17,8 @@ a job offer and provide with some auto matched job seekers that meet the criteri
 
 ============================================================
 
-In the current version it only gets to the point the lets you create a user,login,logout,edit your user and delete your user,create a job offer,edit it and/or delete it.
+In the current version it supports the creation of user/company profile,login,logout,edit your user/company profile delete your account,create a job offer,edit it and/or delete it and finaly it has the ability to mach based on cv and the open job proposals.
 
-Make the mechanism responsible for the match of job offers and users work and maybe building an email alert when mached to an offer.
+Some future additions should be to tighten the security of the app using php methods, sending mail or other type of alerts, add chat mechanism, make the matching function more sophisticated.
 
 Any porposals are welcome! :)
