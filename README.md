@@ -1,4 +1,4 @@
-# Job Matceer
+# Job Matcher
 Web-app matching users with job offers based on their profile.
 
 ====================== Author details ======================
