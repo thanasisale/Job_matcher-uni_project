@@ -38,7 +38,7 @@
               </div><!-- Closing the Form -->
 
               <?php
-              // Ceching if the Form is Submitted
+              // Checking if the Form is Submitted
               if(isset($_POST['Submit'])) {
 
                 //Striping hazardous symbols for the db and preparing to insert to the db

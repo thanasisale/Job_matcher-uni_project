@@ -1,41 +1,31 @@
-<?php/*
-//including the database connection file
+<?php
+//including the header file
 include 'head.php';
-include 'auth.php';
-include 'automach.php';
-//fetching data in ascending order (first entry first)
-
-$resultall = mysqli_query($mysqli, "SELECT * FROM usertab WHERE ID = $wid ORDER BY ID ASC"); // using mysqli_query
-while($restall = mysqli_fetch_array($restall)){
-  $email = $restall['email'];
-}
 ?>
 
 
-        <title>Result Page</title>
+        <title>Home Page</title>
 
-        <div class="home">
+        <div class=" container home">
 
-            <div class="title"><h3>Αποτελέσματα</h3></div>
-            <table>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                </tr>
-                <?php
-                //Showing the db records
-                $i = 0;
-                while ($i <= $n) {
-                  echo "<tr>";
-                  echo "<td>".$wfname[$i]."</td>";
-                  echo "<td>".$wlname[$i]."</td>";
-                  echo "<td>".$email[$i]."</td>";
-                  echo "<td><a href=\"profile.php?id=$wid[$i]\">View</a>";
-                  $i = $i + 1;
-                }
+          <div class="row">
+            <div class="col-sm welcome">
+              <h2>Welcome,</h2>
+              <p>This web application helps you to find a job well suited for you, or a worker for your company.</p>
+            </div>
+          </div>
 
-                ?>
-            </table>
+          <div class="row" style="text-align:center;">
+            <div class="col-sm logincol">
+              <p>If you already have an acount you can log in here, else...</p>
+              <a href="login.php" class="btn btn-primary custombtn"> Log in </a>
+            </div>
+            <div class="col-sm subcol">
+              <p>If you are a company, wich is trying to find a good worker or a worker, who searches a fine job you can register here.</p>
+              <a href="add.php" class="btn btn-primary custombtn">Register</a>
+            </div>
+          </div>
+
         </div>
-        <?php include 'footer.php';*/?>
+
+        <?php include 'footer.php';?>

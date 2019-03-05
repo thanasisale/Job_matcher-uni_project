@@ -113,12 +113,12 @@ include("auth.php");
 
               <div class="form-group">
                 <label for="name">First Name</label>
-                <input type="text" name="wname" class="form-control" id="name" placeholder="Enter the title" value="<?php echo $wfname; ?>" required>
+                <input type="text" name="wname" class="form-control" id="name" placeholder="Enter yout First Name" value="<?php echo $wfname; ?>" required>
               </div>
 
               <div class="form-group">
                 <label for="lname">Last Name</label>
-                <input type="text" name="wlname" class="form-control" id="lname" placeholder="Enter the title" value="<?php echo $wlname; ?>" required>
+                <input type="text" name="wlname" class="form-control" id="lname" placeholder="Enter yout Last Name" value="<?php echo $wlname; ?>" required>
               </div>
 
               <label for="radio">Graduation Level</label>

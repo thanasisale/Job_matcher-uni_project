@@ -447,4 +447,5 @@ mysqli_free_result($resultwork);
 mysqli_free_result($resultcomp);
 mysqli_free_result($resultoffer);
 mysqli_free_result($result);
+include 'footer.php';
 ?>

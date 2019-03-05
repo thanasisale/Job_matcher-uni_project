@@ -110,7 +110,7 @@ include("auth.php");
 
         <?php
 
-        // Ceching if the Form is Submitted
+        // Checking if the Form is Submitted
         if(isset($_POST['Submit'])) {
 
           //Escaping hazardous symbols for the db and preparing to insert to the db

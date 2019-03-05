@@ -2,7 +2,28 @@
 body{
 	font-family: 'Comfortaa', cursive!important;
 }
+/* Home Page */
 
+.home{
+	text-align: center;
+}
+
+.welcome{
+	margin: 1em auto;
+}
+.welcome h2{
+	color:#2C3E50;
+}
+
+.logincol{
+	margin: 1em auto;
+}
+.logincol a{
+	margin-top: 2em;
+}
+.subcol{
+	margin: 1em auto;
+}
 /* Profile */
 .profile{
 	text-align: center;

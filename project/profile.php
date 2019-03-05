@@ -117,8 +117,10 @@ if (isset($linkid)) {
               </tr>
 
 
+            </table><!-- Closing profile table for Worker -->
 
             <a  class="btn costbtn btn-outline-primary" href="automach.php?id=<?php echo $id; ?>">Show Me Job Offers</a>
+
 
           <?php } ?>
 
